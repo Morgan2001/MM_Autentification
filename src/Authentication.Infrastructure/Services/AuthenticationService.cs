@@ -49,6 +49,10 @@ public class AuthenticationService : IAuthenticationService
         string accessToken = _jwtGenerator.GenerateAccessToken(foundToken.DeviceId);
         string newRefreshToken = _jwtGenerator.GenerateRefreshToken(foundToken.DeviceId);
 
+        await _context.RefreshTokens.AddAsync(new RefreshToken(newRefreshToken, foundToken.DeviceId));
+        _context.RefreshTokens.Remove(foundToken);
+
+        await _context.SaveChangesAsync();
         var tokens = new JwtTokens(accessToken, newRefreshToken);
 
         return Result.Ok(tokens);
