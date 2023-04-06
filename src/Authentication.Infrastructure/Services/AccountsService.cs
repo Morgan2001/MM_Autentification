@@ -53,7 +53,29 @@ public class AccountsService : IAccountsService
         var protectedAccount = new ProtectedAccount(email, hash, Convert.ToBase64String(salt), foundGuestAccount);
         var result = (await _context.ProtectedAccounts.AddAsync(protectedAccount)).Entity;
         await _context.SaveChangesAsync();
-        
+
         return Result.Ok(result);
+    }
+
+    public async Task<Result<ProtectedAccount>> ChangePassword(string deviceId, string oldPassword,
+        string newPassword)
+    {
+        var foundAccount = await _context.ProtectedAccounts
+            .FirstOrDefaultAsync(x => x.GuestAccount.DeviceId == deviceId);
+
+        if (foundAccount is null) return Result.Fail<ProtectedAccount>("Account not found");
+
+        if (!_passwordHasher.VerifyPassword(oldPassword, foundAccount.PasswordHash,
+                Convert.FromBase64String(foundAccount.PasswordSalt)))
+            return Result.Fail<ProtectedAccount>("Old password is wrong");
+
+        string hash = _passwordHasher.HashPassword(newPassword, out byte[] salt);
+
+        foundAccount.PasswordHash = hash;
+        foundAccount.PasswordSalt = Convert.ToBase64String(salt);
+
+        await _context.SaveChangesAsync();
+
+        return Result.Ok(foundAccount);
     }
 }

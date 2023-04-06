@@ -86,15 +86,65 @@ public class AccountsServiceTests
     }
 
     [Fact]
-    private async Task ProtectAccount_WithInvalidCredentials_ShouldBeFailed()
+    private async Task ProtectAccount_WithInvalidDeviceId_ShouldBeFailed()
     {
         string deviceId = string.Empty;
+        string email = Email;
+
+        var resultWithInvalidCredentials =
+            await _accountsService.ProtectAccount(deviceId, email, Password);
+
+        resultWithInvalidCredentials.IsFailed.Should().BeTrue();
+    }
+    
+    [Fact]
+    private async Task ProtectAccount_WithInvalidCredentials_ShouldBeFailed()
+    {
+        string deviceId = DeviceId;
         string email = string.Empty;
         string password = string.Empty;
-        
+
         var resultWithInvalidCredentials =
             await _accountsService.ProtectAccount(deviceId, email, password);
 
         resultWithInvalidCredentials.IsFailed.Should().BeTrue();
+    }
+
+    [Fact]
+    private async Task ChangePassword_WithValidOldPassword_ShouldBeSuccessful()
+    {
+        string deviceId = DeviceId;
+        string email = Email;
+
+        var guestAccountResult = await _accountsService.RegisterGuestAccount(deviceId);
+        await _accountsService.ProtectAccount(guestAccountResult.Value.DeviceId, email, Password);
+
+        var changePasswordResult = await _accountsService.ChangePassword(deviceId, Password, "New-Password");
+
+        changePasswordResult.IsSuccess.Should().BeTrue();
+    }
+    
+    [Fact]
+    private async Task ChangePassword_WithInvalidOldPassword_ShouldBeFailed()
+    {
+        string deviceId = DeviceId;
+        string email = Email;
+
+        var guestAccountResult = await _accountsService.RegisterGuestAccount(deviceId);
+        await _accountsService.ProtectAccount(guestAccountResult.Value.DeviceId, email, Password);
+
+        var changePasswordResult = await _accountsService.ChangePassword(deviceId, "Invalid-Password", "New-Password");
+
+        changePasswordResult.IsFailed.Should().BeTrue();
+    }
+    
+    [Fact]
+    private async Task ChangePassword_WithUnregisteredAccount_ShouldBeFailed()
+    {
+        string deviceId = DeviceId;
+        
+        var changePasswordResult = await _accountsService.ChangePassword(deviceId, "Invalid-Password", "New-Password");
+
+        changePasswordResult.IsFailed.Should().BeTrue();
     }
 }

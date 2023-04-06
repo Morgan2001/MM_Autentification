@@ -7,4 +7,7 @@ public interface IAccountsService
 {
     Task<Result<GuestAccount>> RegisterGuestAccount(string deviceId);
     Task<Result<ProtectedAccount>> ProtectAccount(string deviceId, string email, string password);
+
+    Task<Result<ProtectedAccount>>
+        ChangePassword(string deviceId, string oldPassword, string newPassword);
 }
