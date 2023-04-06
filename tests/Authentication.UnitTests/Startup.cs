@@ -1,4 +1,5 @@
 ﻿using Authentication.Application.Interfaces;
+using Authentication.Infrastructure.Services;
 using Authentication.UnitTests.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,5 +12,6 @@ public class Startup
     {
         services.AddDbContext<IApplicationContext, TestContext>(builder =>
             builder.UseInMemoryDatabase("Test-DB"));
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
     }
 }

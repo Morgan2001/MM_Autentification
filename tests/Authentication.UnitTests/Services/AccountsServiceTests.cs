@@ -6,16 +6,14 @@ namespace Authentication.UnitTests.Services;
 
 public class AccountsServiceTests
 {
-    private readonly IApplicationContext _context;
     private readonly AccountsService _accountsService;
     private static string DeviceId => Guid.NewGuid().ToString();
     private static string Email => $"test-{Guid.NewGuid()}@test.com";
     private const string Password = "test-password";
 
-    public AccountsServiceTests(IApplicationContext context)
+    public AccountsServiceTests(IApplicationContext context, IPasswordHasher passwordHasher)
     {
-        _context = context;
-        _accountsService = new AccountsService(context);
+        _accountsService = new AccountsService(context, passwordHasher);
     }
 
     [Fact]
