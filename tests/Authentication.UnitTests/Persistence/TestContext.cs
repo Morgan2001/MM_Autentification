@@ -9,8 +9,10 @@ public class TestContext : DbContext, IApplicationContext
 {
     public DbSet<GuestAccount> GuestAccounts { get; set; } = null!;
     public DbSet<ProtectedAccount> ProtectedAccounts { get; set; } = null!;
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
     public TestContext(DbContextOptions<TestContext> options) : base(options) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GuestAccountConfiguration).Assembly);

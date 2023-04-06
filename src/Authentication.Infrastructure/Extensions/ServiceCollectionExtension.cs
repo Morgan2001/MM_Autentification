@@ -19,6 +19,7 @@ public static class ServiceCollectionExtension
     {
         ConfigureDatabase(services, configuration);
 
+        services.AddScoped<IAccountsService, AccountsService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddOptions<JwtGeneratorOptions>()
             .Bind(configuration.GetSection(JwtGeneratorOptions.SectionName))
@@ -27,6 +28,7 @@ public static class ServiceCollectionExtension
                   string.IsNullOrWhiteSpace(options.Issuer) && options.Lifetime > 0));
 
         services.AddScoped<IJwtGenerator, JwtGenerator>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         return services;
     }

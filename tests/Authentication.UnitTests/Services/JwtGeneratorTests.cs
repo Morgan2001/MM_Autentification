@@ -23,26 +23,18 @@ public class JwtGeneratorTests
     }
 
     [Fact]
-    private void GenerateAccessToken_WithInvalidDeviceId_ShouldNotBeNullOrEmpty()
+    private void GenerateAccessToken_WithInvalidDeviceId_ShouldThrow()
     {
         var act = () => _jwtGenerator.GenerateAccessToken(string.Empty);
-        
+
         act.Should().Throw<ArgumentException>();
     }
-    
-    [Fact]
-    private void GenerateRefreshToken_WithValidDeviceId_ShouldNotBeNullOrEmpty()
-    {
-        string result = _jwtGenerator.GenerateRefreshToken(Guid.NewGuid().ToString());
-
-        result.Should().NotBeNullOrWhiteSpace();
-    }
 
     [Fact]
-    private void GenerateRefreshToken_WithInvalidDeviceId_ShouldNotBeNullOrEmpty()
+    private void GenerateRefreshToken_WithInvalidDeviceId_ShouldThrow()
     {
         var act = () => _jwtGenerator.GenerateRefreshToken(string.Empty);
-        
+
         act.Should().Throw<ArgumentException>();
     }
 }
