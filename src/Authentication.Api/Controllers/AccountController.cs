@@ -11,25 +11,25 @@ namespace Authentication.Api.Controllers;
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private readonly IValidator<CreateGuestAccountDto> _guestAccountValidator;
-    private readonly IValidator<ProtectAccountDto> _protectAccountValidator;
-    private readonly IValidator<ChangePasswordDto> _changePasswordValidator;
+    private readonly IValidator<CreateGuestAccountDto> _guestAccountDtoValidator;
+    private readonly IValidator<ProtectAccountDto> _protectAccountDtoValidator;
+    private readonly IValidator<ChangePasswordDto> _changePasswordDtoValidator;
     private readonly IAccountsService _accountsService;
 
-    public AccountController(IValidator<CreateGuestAccountDto> guestAccountValidator,
-        IValidator<ProtectAccountDto> protectAccountValidator, IValidator<ChangePasswordDto> changePasswordValidator,
+    public AccountController(IValidator<CreateGuestAccountDto> guestAccountDtoValidator,
+        IValidator<ProtectAccountDto> protectAccountDtoValidator, IValidator<ChangePasswordDto> changePasswordDtoValidator,
         IAccountsService accountsService)
     {
-        _guestAccountValidator = guestAccountValidator;
-        _protectAccountValidator = protectAccountValidator;
-        _changePasswordValidator = changePasswordValidator;
+        _guestAccountDtoValidator = guestAccountDtoValidator;
+        _protectAccountDtoValidator = protectAccountDtoValidator;
+        _changePasswordDtoValidator = changePasswordDtoValidator;
         _accountsService = accountsService;
     }
 
     [HttpPost("/account/guest")]
     public async Task<IActionResult> RegisterGuestAccount(CreateGuestAccountDto dto)
     {
-        var validationResult = await _guestAccountValidator.ValidateAsync(dto);
+        var validationResult = await _guestAccountDtoValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
@@ -38,7 +38,7 @@ public class AccountController : ControllerBase
         }
 
         var result = await _accountsService.RegisterGuestAccount(dto.DeviceId);
-        if (!result.IsFailed) return Ok();
+        if (result.IsSuccess) return Ok();
 
         result.AddToModelState(ModelState);
 
@@ -48,7 +48,7 @@ public class AccountController : ControllerBase
     [HttpPost("/account/protect")]
     public async Task<IActionResult> ProtectAccount(ProtectAccountDto dto)
     {
-        var validationResult = await _protectAccountValidator.ValidateAsync(dto);
+        var validationResult = await _protectAccountDtoValidator.ValidateAsync(dto);
         if (!validationResult.IsValid)
         {
             validationResult.AddToModelState(ModelState);
@@ -56,7 +56,7 @@ public class AccountController : ControllerBase
         }
 
         var result = await _accountsService.ProtectAccount(dto.DeviceId, dto.Email, dto.Password);
-        if (!result.IsFailed) return Ok();
+        if (result.IsSuccess) return Ok();
 
         result.AddToModelState(ModelState);
 
@@ -66,7 +66,7 @@ public class AccountController : ControllerBase
     [HttpPatch("/account")]
     public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
     {
-        var validationResult = await _changePasswordValidator.ValidateAsync(dto);
+        var validationResult = await _changePasswordDtoValidator.ValidateAsync(dto);
         if (!validationResult.IsValid)
         {
             validationResult.AddToModelState(ModelState);

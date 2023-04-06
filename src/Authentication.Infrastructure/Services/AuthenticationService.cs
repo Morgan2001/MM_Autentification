@@ -22,7 +22,9 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<Result<JwtTokens>> Authenticate(string email, string password)
     {
-        var account = await _context.ProtectedAccounts.FirstOrDefaultAsync(x => x.Email == email);
+        var account = await _context.ProtectedAccounts
+            .Include(x => x.GuestAccount)
+            .FirstOrDefaultAsync(x => x.Email == email);
         if (account is null) return Result.Fail<JwtTokens>("Account not found");
 
         if (!_passwordHasher.VerifyPassword(password, account.PasswordHash,
