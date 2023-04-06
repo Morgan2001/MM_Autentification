@@ -1,9 +1,17 @@
+using Authentication.Api.Validators;
+using Authentication.Infrastructure.Extensions;
+using FluentValidation;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthenticationInfrastructure(builder.Configuration);
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(CreateGuestAccountDtoValidator));
+ValidatorOptions.Global.LanguageManager.Enabled = false;
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(swaggerGenOptions => swaggerGenOptions.SupportNonNullableReferenceTypes());
 
 var app = builder.Build();
 
