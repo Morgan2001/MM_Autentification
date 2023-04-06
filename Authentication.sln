@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Domain", "src\Authentication.Domain\Authentication.Domain.csproj", "{DF8F1D27-5F50-4D59-A5D0-637A678B7117}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Application", "src\Authentication.Application\Authentication.Application.csproj", "{99A1D4AE-0D88-4ABF-88FC-F85F38D8F0C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{DF8F1D27-5F50-4D59-A5D0-637A678B7117}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF8F1D27-5F50-4D59-A5D0-637A678B7117}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF8F1D27-5F50-4D59-A5D0-637A678B7117}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A1D4AE-0D88-4ABF-88FC-F85F38D8F0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A1D4AE-0D88-4ABF-88FC-F85F38D8F0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A1D4AE-0D88-4ABF-88FC-F85F38D8F0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A1D4AE-0D88-4ABF-88FC-F85F38D8F0C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
