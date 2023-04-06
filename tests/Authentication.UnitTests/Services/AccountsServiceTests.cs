@@ -37,6 +37,16 @@ public class AccountsServiceTests
     }
 
     [Fact]
+    private async Task RegisterGuestAccount_WithSameDeviceId_ShouldBeFailed()
+    {
+        string deviceId = DeviceId;
+        await _accountsService.RegisterGuestAccount(deviceId);
+        var result = await _accountsService.RegisterGuestAccount(deviceId);
+
+        result.IsFailed.Should().BeTrue();
+    }
+
+    [Fact]
     private async Task ProtectAccount_WithRegisteredAccount_ShouldBeSuccessful()
     {
         string deviceId = DeviceId;
@@ -73,5 +83,18 @@ public class AccountsServiceTests
         var protectResult = await _accountsService.ProtectAccount(deviceId, email, Password);
 
         protectResult.IsFailed.Should().BeTrue();
+    }
+
+    [Fact]
+    private async Task ProtectAccount_WithInvalidCredentials_ShouldBeFailed()
+    {
+        string deviceId = string.Empty;
+        string email = string.Empty;
+        string password = string.Empty;
+        
+        var resultWithInvalidCredentials =
+            await _accountsService.ProtectAccount(deviceId, email, password);
+
+        resultWithInvalidCredentials.IsFailed.Should().BeTrue();
     }
 }
