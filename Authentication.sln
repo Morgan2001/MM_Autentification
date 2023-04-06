@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Infrastructure", "src\Authentication.Infrastructure\Authentication.Infrastructure.csproj", "{48C682F1-E5BF-4FA7-906E-F6047A75611F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.UnitTests", "tests\Authentication.UnitTests\Authentication.UnitTests.csproj", "{10E730AC-9DF9-457C-9CE3-6612F0D3D593}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{48C682F1-E5BF-4FA7-906E-F6047A75611F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48C682F1-E5BF-4FA7-906E-F6047A75611F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48C682F1-E5BF-4FA7-906E-F6047A75611F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10E730AC-9DF9-457C-9CE3-6612F0D3D593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10E730AC-9DF9-457C-9CE3-6612F0D3D593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10E730AC-9DF9-457C-9CE3-6612F0D3D593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10E730AC-9DF9-457C-9CE3-6612F0D3D593}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
