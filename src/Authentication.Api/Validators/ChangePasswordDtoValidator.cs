@@ -7,7 +7,7 @@ public class ChangePasswordDtoValidator : AbstractValidator<ChangePasswordDto>
 {
     public ChangePasswordDtoValidator()
     {
-        RuleFor(x => x.DeviceId).NotEmpty();
+        RuleFor(x => x.Email).NotEmpty();
         RuleFor(x => x.OldPassword).NotEmpty();
         RuleFor(x => x.NewPassword).NotEmpty();
     }

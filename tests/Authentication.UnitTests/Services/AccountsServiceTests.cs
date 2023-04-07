@@ -119,7 +119,7 @@ public class AccountsServiceTests
         var guestAccountResult = await _accountsService.RegisterGuestAccount(deviceId);
         await _accountsService.ProtectAccount(guestAccountResult.Value.DeviceId, email, Password);
 
-        var changePasswordResult = await _accountsService.ChangePassword(deviceId, Password, "New-Password");
+        var changePasswordResult = await _accountsService.ChangePassword(email, Password, "New-Password");
 
         changePasswordResult.IsSuccess.Should().BeTrue();
     }

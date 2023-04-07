@@ -86,13 +86,15 @@ public class AccountControllerTests : WebApplicationFactory<Program>
     {
         var client = CreateClient();
         string deviceId = DeviceId;
+        string email = Email;
+        
         var guestDto = new CreateGuestAccountDto(deviceId);
         await client.PostAsJsonAsync("/account/guest", guestDto);
 
-        var protectDto = new ProtectAccountDto(deviceId, Email, Password);
+        var protectDto = new ProtectAccountDto(deviceId, email, Password);
         await client.PostAsJsonAsync("/account/protect", protectDto);
 
-        var changePasswordDto = new ChangePasswordDto(deviceId, Password, "new-password");
+        var changePasswordDto = new ChangePasswordDto(email, Password, "new-password");
         var result = await client.PatchAsJsonAsync("/account", changePasswordDto);
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }

@@ -6,7 +6,6 @@ using Authentication.Api.Dto;
 using Authentication.Domain.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using JsonSerializer=System.Text.Json.JsonSerializer;
 
 namespace Authentication.IntegrationTests.Controllers;
 

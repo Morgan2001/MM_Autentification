@@ -57,11 +57,11 @@ public class AccountsService : IAccountsService
         return Result.Ok(result);
     }
 
-    public async Task<Result<ProtectedAccount>> ChangePassword(string deviceId, string oldPassword,
+    public async Task<Result<ProtectedAccount>> ChangePassword(string email, string oldPassword,
         string newPassword)
     {
         var foundAccount = await _context.ProtectedAccounts
-            .FirstOrDefaultAsync(x => x.GuestAccount.DeviceId == deviceId);
+            .FirstOrDefaultAsync(x => x.Email == email);
 
         if (foundAccount is null) return Result.Fail<ProtectedAccount>("Account not found");
 

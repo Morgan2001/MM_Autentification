@@ -71,7 +71,7 @@ public class AccountController : ControllerBase
             validationResult.AddToModelState(ModelState);
             return ValidationProblem();
         }
-        var result = await _accountsService.ChangePassword(dto.DeviceId, dto.OldPassword, dto.NewPassword);
+        var result = await _accountsService.ChangePassword(dto.Email, dto.OldPassword, dto.NewPassword);
         if (!result.IsFailed) return Ok();
         
         result.AddToModelState(ModelState);
