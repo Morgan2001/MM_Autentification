@@ -27,4 +27,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+namespace Authentication.Api
+{
+    public partial class Program { }
+}

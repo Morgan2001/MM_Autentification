@@ -1,10 +1,11 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using Authentication.Api;
 using Authentication.Api.Dto;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Authentication.IntegrationTests;
+namespace Authentication.IntegrationTests.Controllers;
 
 public class AccountControllerTests : WebApplicationFactory<Program>
 {
