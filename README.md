@@ -10,13 +10,13 @@ dotnet build ./src/Authentication.Api
 #### Docker build:
 
 ```
-docker build -t Morgan2001/authentication-api .
+docker build -t morgan2001/authentication-api .
 ```
 
 #### Docker run:
 
 ```
-docker run -d -p 8080:80 -e ASPNET_ENVIRONMENT=Development ghcr.io/Morgan2001/authentication-api
+docker run -d -p 8080:80 -e ASPNET_ENVIRONMENT=Development ghcr.io/morgan2001/authentication-api
 ```
 
 ### Api Documentation
