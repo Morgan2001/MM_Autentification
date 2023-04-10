@@ -1,0 +1,7 @@
+services:
+  authentication-api:
+    image: ghcr.io/morgan2001/mm_autentification:master
+    ports:
+      - 8080:80
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
