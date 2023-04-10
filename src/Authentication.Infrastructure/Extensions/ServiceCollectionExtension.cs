@@ -11,7 +11,7 @@ namespace Authentication.Infrastructure.Extensions;
 public static class ServiceCollectionExtension
 {
     private const string UseInMemoryDatabaseKey = "UseInMemoryDatabase";
-    private const string PostgresKey = "Postgres";
+    private const string MySqlKey = "MySql";
     private const string InMemAuthenticationDbName = "Authentication-DB";
 
     public static IServiceCollection AddAuthenticationInfrastructure(this IServiceCollection services,
@@ -47,7 +47,7 @@ public static class ServiceCollectionExtension
         services.AddDbContext<IApplicationContext, ApplicationContext>(builder => {
             if (configuration.GetSection(UseInMemoryDatabaseKey).Get<bool>())
                 builder.UseInMemoryDatabase(InMemAuthenticationDbName);
-            else builder.UseNpgsql(configuration.GetConnectionString(PostgresKey));
+            else builder.UseMySql(configuration.GetConnectionString(MySqlKey), ServerVersion.AutoDetect(MySqlKey));
         });
     }
 }
