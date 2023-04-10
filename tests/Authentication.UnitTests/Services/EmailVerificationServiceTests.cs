@@ -74,4 +74,40 @@ public class EmailVerificationServiceTests
 
         verificationResult.IsFailed.Should().BeTrue();
     }
+
+    [Fact]
+    private async Task SubmitVerificationCode_WithValidCode_ShouldBeSuccessful()
+    {
+        string generatedEmail = FakeDataHelper.GenerateEmail();
+        var account = await CreateProtectedAccount(
+            FakeDataHelper.GenerateDeviceId(),
+            generatedEmail,
+            FakeDataHelper.GeneratePassword());
+
+        var verificationServiceMock = VerificationServiceMockFactory.Create(_context);
+        var code = await verificationServiceMock.SendVerificationCode(generatedEmail);
+
+        var result = await verificationServiceMock.SubmitVerificationCode(code.Value.Code);
+        
+        result.IsSuccess.Should().BeTrue();
+        account.IsVerified.Should().BeTrue();
+    }
+    
+    [Fact]
+    private async Task SubmitVerificationCode_WithInvalidCode_ShouldBeSuccessful()
+    {
+        string generatedEmail = FakeDataHelper.GenerateEmail();
+        var account = await CreateProtectedAccount(
+            FakeDataHelper.GenerateDeviceId(),
+            generatedEmail,
+            FakeDataHelper.GeneratePassword());
+
+        var verificationServiceMock = VerificationServiceMockFactory.Create(_context);
+        await verificationServiceMock.SendVerificationCode(generatedEmail);
+
+        var result = await verificationServiceMock.SubmitVerificationCode(string.Empty);
+        
+        result.IsFailed.Should().BeTrue();
+        account.IsVerified.Should().BeFalse();
+    }
 }
