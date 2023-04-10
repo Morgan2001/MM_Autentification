@@ -1,6 +1,7 @@
 ﻿using Authentication.Application.Interfaces;
 using Authentication.Domain.Entities;
 using Authentication.Infrastructure.Services;
+using Authentication.UnitTests.Factories;
 using FluentAssertions;
 
 namespace Authentication.UnitTests.Services;
@@ -10,9 +11,6 @@ public class AuthenticationServiceTests
     private readonly IApplicationContext _context;
     private readonly IPasswordHasher _passwordHasher;
     private readonly AuthenticationService _authenticationService;
-    private static string DeviceId => Guid.NewGuid().ToString();
-    private static string Email => $"test-{Guid.NewGuid()}@test.com";
-    private const string Password = "my-password";
 
     public AuthenticationServiceTests(IApplicationContext context, IPasswordHasher passwordHasher,
         IJwtGenerator jwtGenerator)
@@ -28,7 +26,7 @@ public class AuthenticationServiceTests
         var guestAccount = new GuestAccount(deviceId);
         await _context.GuestAccounts.AddAsync(guestAccount);
 
-        string hash = _passwordHasher.HashPassword(Password, out byte[] salt);
+        string hash = _passwordHasher.HashPassword(password, out byte[] salt);
 
         var protectedAccount = new ProtectedAccount(email, hash, Convert.ToBase64String(salt), guestAccount);
         await _context.ProtectedAccounts.AddAsync(protectedAccount);
@@ -40,12 +38,13 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task Authenticate_WithValidCredentials_ShouldBeSuccessful()
     {
-        string deviceId = DeviceId;
-        string email = Email;
+        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string email = FakeDataHelper.GenerateEmail();
+        string password = FakeDataHelper.GeneratePassword();
 
-        await CreateProtectedAccount(deviceId, email, Password);
+        await CreateProtectedAccount(deviceId, email, password);
 
-        var result = await _authenticationService.Authenticate(email, Password);
+        var result = await _authenticationService.Authenticate(email, password);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
@@ -56,10 +55,10 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task Authenticate_WithInvalidCredentials_ShouldBeFailed()
     {
-        string deviceId = DeviceId;
-        string email = Email;
+        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string email = FakeDataHelper.GenerateEmail();
 
-        await CreateProtectedAccount(deviceId, email, Password);
+        await CreateProtectedAccount(deviceId, email, FakeDataHelper.GeneratePassword());
 
         var result = await _authenticationService.Authenticate(email, "invalid-password");
 
@@ -69,9 +68,9 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task Authenticate_WithUnregisteredAccount_ShouldBeFailed()
     {
-        string email = Email;
+        string email = FakeDataHelper.GenerateEmail();
 
-        var result = await _authenticationService.Authenticate(email, Password);
+        var result = await _authenticationService.Authenticate(email, FakeDataHelper.GeneratePassword());
 
         result.IsFailed.Should().BeTrue();
     }
@@ -79,12 +78,13 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task RefreshToken_WithValidToken_ShouldBeSuccessful()
     {
-        string deviceId = DeviceId;
-        string email = Email;
+        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string email = FakeDataHelper.GenerateEmail();
+        string password = FakeDataHelper.GeneratePassword();
+        
+        await CreateProtectedAccount(deviceId, email, password);
 
-        await CreateProtectedAccount(deviceId, email, Password);
-
-        var authenticateResult = await _authenticationService.Authenticate(email, Password);
+        var authenticateResult = await _authenticationService.Authenticate(email, password);
 
         var tokens = await _authenticationService.RefreshToken(authenticateResult.Value.RefreshToken);
 

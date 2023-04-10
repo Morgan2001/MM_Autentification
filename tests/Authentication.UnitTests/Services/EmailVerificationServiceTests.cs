@@ -2,6 +2,7 @@
 using Authentication.Domain.Entities;
 using Authentication.Infrastructure.Options;
 using Authentication.Infrastructure.Services;
+using Authentication.UnitTests.Factories;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 
@@ -12,9 +13,6 @@ public class EmailVerificationServiceTests
     private readonly IApplicationContext _context;
     private readonly EmailVerificationService _verificationService;
     private readonly IAccountsService _accountsService;
-    private static string Email => $"test-{Guid.NewGuid()}@test.com";
-    private static string DeviceId => Guid.NewGuid().ToString();
-    private const string Password = "My-Password123!";
 
     public EmailVerificationServiceTests(IApplicationContext context, IOptions<EmailOptions> options,
         IAccountsService accountsService)
@@ -30,12 +28,12 @@ public class EmailVerificationServiceTests
         var protectedAccount = await _accountsService.ProtectAccount(deviceId, email, password);
         return protectedAccount.Value;
     }
-    
+
     [Fact]
     private async Task SendVerificationCode_WithRegisteredAccount_ShouldBeSuccessful()
     {
-        string deviceId = DeviceId;
-        var account = await CreateProtectedAccount(deviceId, "roman@mogames.xyz", Password);
+        string deviceId = FakeDataHelper.GenerateDeviceId();
+        var account = await CreateProtectedAccount(deviceId, "roman@mogames.xyz", FakeDataHelper.GeneratePassword());
         var verificationResult = await _verificationService.SendVerificationCode(account.Email);
 
         verificationResult.IsSuccess.Should().BeTrue();
@@ -44,10 +42,10 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SendVerificationCode_WithAlreadyVerifiedAccount_ShouldBeFailed()
     {
-        string deviceId = DeviceId;
-        string email = Email;
+        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string email = FakeDataHelper.GenerateEmail();
 
-        var account = await CreateProtectedAccount(deviceId, email, Password);
+        var account = await CreateProtectedAccount(deviceId, email, FakeDataHelper.GeneratePassword());
         account.IsVerified = true;
 
         var verificationResult = await _verificationService.SendVerificationCode(account.Email);
@@ -58,10 +56,10 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SendVerificationCode_WithAlreadySentCode_ShouldBeFailed()
     {
-        string deviceId = DeviceId;
-        string email = Email;
+        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string email = FakeDataHelper.GenerateEmail();
 
-        var account = await CreateProtectedAccount(deviceId, email, Password);
+        var account = await CreateProtectedAccount(deviceId, email, FakeDataHelper.GeneratePassword());
         await _context.VerificationCodes.AddAsync(new VerificationCode(email, Guid.NewGuid().ToString()));
         await _context.SaveChangesAsync();
         var verificationResult = await _verificationService.SendVerificationCode(account.Email);
@@ -72,7 +70,7 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SendVerificationCode_WithUnregisteredAccount_ShouldBeFailed()
     {
-        var verificationResult = await _verificationService.SendVerificationCode(Email);
+        var verificationResult = await _verificationService.SendVerificationCode(FakeDataHelper.GenerateEmail());
 
         verificationResult.IsFailed.Should().BeTrue();
     }
