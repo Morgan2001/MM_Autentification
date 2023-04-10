@@ -1,4 +1,5 @@
-﻿using Authentication.Application.Interfaces;
+﻿using System.Reflection;
+using Authentication.Application.Interfaces;
 using Authentication.Infrastructure.Extensions;
 using Authentication.UnitTests.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public class Startup
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Development.json", false)
+            .AddUserSecrets(Assembly.GetExecutingAssembly(), false)
             .Build();
 
         services.AddAuthenticationInfrastructure(configuration);

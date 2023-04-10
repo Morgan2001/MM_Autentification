@@ -14,4 +14,14 @@ public static class ResultToModelStateExtensions
             modelState.AddModelError("Validation", reason.Message);
         }
     }
+    
+    public static void AddToModelState(this Result result, ModelStateDictionary modelState)
+    {
+        if (result.IsSuccess) return;
+
+        foreach (var reason in result.Reasons)
+        {
+            modelState.AddModelError("Validation", reason.Message);
+        }
+    }
 }

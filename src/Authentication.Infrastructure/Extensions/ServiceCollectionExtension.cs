@@ -30,6 +30,15 @@ public static class ServiceCollectionExtension
         services.AddScoped<IJwtGenerator, JwtGenerator>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
 
+        services.AddOptions<EmailOptions>()
+            .Bind(configuration.GetSection(EmailOptions.SectionName))
+            .Validate(options => !(string.IsNullOrWhiteSpace(options.From) &&
+                                   string.IsNullOrWhiteSpace(options.Subject) &&
+                                   string.IsNullOrWhiteSpace(options.BaseUrl) &&
+                                   string.IsNullOrWhiteSpace(options.PostmarkToken)));
+
+        services.AddScoped<IVerificationService, EmailVerificationService>();
+
         return services;
     }
 

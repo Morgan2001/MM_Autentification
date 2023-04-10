@@ -8,6 +8,7 @@ public interface IApplicationContext
     DbSet<GuestAccount> GuestAccounts { get; }
     DbSet<ProtectedAccount> ProtectedAccounts { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
+    DbSet<VerificationCode> VerificationCodes { get; }
 
     Task<int> SaveChangesAsync(CancellationToken ct = default);
 }

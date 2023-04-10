@@ -17,4 +17,5 @@ public record ProtectedAccount
     public string PasswordHash { get; set; } = null!;
     public string PasswordSalt { get; set; } = null!;
     public GuestAccount GuestAccount { get; set; } = null!;
+    public bool IsVerified { get; set; } = false;
 }
