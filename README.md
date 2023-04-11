@@ -19,7 +19,7 @@ docker build -t docker pull ghcr.io/morgan2001/mm_autentification .
 docker pull ghcr.io/morgan2001/mm_autentification:master
 
 //Development
-docker run -d -p 8080:80 -e ASPNET_ENVIRONMENT=Development ghcr.io/morgan2001/mm_autentification:master
+docker run -d -p 8080:80 -e ASPNETCORE_ENVIRONMENT=Development ghcr.io/morgan2001/mm_autentification:master
 
 //Production 
 docker run -d -p 8080:80 ghcr.io/morgan2001/mm_autentification:master
