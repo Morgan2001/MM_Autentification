@@ -47,7 +47,11 @@ public static class ServiceCollectionExtension
         services.AddDbContext<IApplicationContext, ApplicationContext>(builder => {
             if (configuration.GetSection(UseInMemoryDatabaseKey).Get<bool>())
                 builder.UseInMemoryDatabase(InMemAuthenticationDbName);
-            else builder.UseMySql(configuration.GetConnectionString(MySqlKey), ServerVersion.AutoDetect(MySqlKey));
+            else
+            {
+                string? connectionString = configuration.GetConnectionString(MySqlKey);
+                builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            }
         });
     }
 }
