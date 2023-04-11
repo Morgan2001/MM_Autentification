@@ -1,6 +1,6 @@
 ﻿using Authentication.Application.Interfaces;
 using Authentication.Infrastructure.Services;
-using Authentication.UnitTests.Factories;
+using Authentication.Tests.Shared.Factories;
 using FluentAssertions;
 
 namespace Authentication.UnitTests.Services;
@@ -17,7 +17,7 @@ public class AccountsServiceTests
     [Fact]
     private async Task RegisterGuestAccount_WithValidDeviceId_ShouldBeSuccessful()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
         var result = await _accountsService.RegisterGuestAccount(deviceId);
 
         result.IsSuccess.Should().BeTrue();
@@ -37,7 +37,7 @@ public class AccountsServiceTests
     [Fact]
     private async Task RegisterGuestAccount_WithSameDeviceId_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
         await _accountsService.RegisterGuestAccount(deviceId);
         var result = await _accountsService.RegisterGuestAccount(deviceId);
 
@@ -47,11 +47,11 @@ public class AccountsServiceTests
     [Fact]
     private async Task ProtectAccount_WithRegisteredAccount_ShouldBeSuccessful()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
         var registrationResult = await _accountsService.RegisterGuestAccount(deviceId);
 
-        string email = FakeDataHelper.GenerateEmail();
-        var protectResult = await _accountsService.ProtectAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+        string email = FakeDataFactory.GenerateEmail();
+        var protectResult = await _accountsService.ProtectAccount(deviceId, email, FakeDataFactory.GeneratePassword());
 
         protectResult.IsSuccess.Should().BeTrue();
         protectResult.Value.Should().NotBeNull();
@@ -62,9 +62,9 @@ public class AccountsServiceTests
     [Fact]
     private async Task ProtectAccount_WithUnregisteredAccount_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
-        var protectResult = await _accountsService.ProtectAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
+        var protectResult = await _accountsService.ProtectAccount(deviceId, email, FakeDataFactory.GeneratePassword());
 
         protectResult.IsFailed.Should().BeTrue();
     }
@@ -72,13 +72,13 @@ public class AccountsServiceTests
     [Fact]
     private async Task ProtectAccount_WithAlreadyRegisteredAccount_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
         await _accountsService.RegisterGuestAccount(deviceId);
 
-        string email = FakeDataHelper.GenerateEmail();
-        await _accountsService.ProtectAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+        string email = FakeDataFactory.GenerateEmail();
+        await _accountsService.ProtectAccount(deviceId, email, FakeDataFactory.GeneratePassword());
 
-        var protectResult = await _accountsService.ProtectAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+        var protectResult = await _accountsService.ProtectAccount(deviceId, email, FakeDataFactory.GeneratePassword());
 
         protectResult.IsFailed.Should().BeTrue();
     }
@@ -87,10 +87,10 @@ public class AccountsServiceTests
     private async Task ProtectAccount_WithInvalidDeviceId_ShouldBeFailed()
     {
         string deviceId = string.Empty;
-        string email = FakeDataHelper.GenerateEmail();
+        string email = FakeDataFactory.GenerateEmail();
 
         var resultWithInvalidCredentials =
-            await _accountsService.ProtectAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+            await _accountsService.ProtectAccount(deviceId, email, FakeDataFactory.GeneratePassword());
 
         resultWithInvalidCredentials.IsFailed.Should().BeTrue();
     }
@@ -98,7 +98,7 @@ public class AccountsServiceTests
     [Fact]
     private async Task ProtectAccount_WithInvalidCredentials_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
         string email = string.Empty;
         string password = string.Empty;
 
@@ -111,9 +111,9 @@ public class AccountsServiceTests
     [Fact]
     private async Task ChangePassword_WithValidOldPassword_ShouldBeSuccessful()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
-        string password = FakeDataHelper.GeneratePassword();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
+        string password = FakeDataFactory.GeneratePassword();
 
         var guestAccountResult = await _accountsService.RegisterGuestAccount(deviceId);
         await _accountsService.ProtectAccount(guestAccountResult.Value.DeviceId, email, password);
@@ -127,11 +127,11 @@ public class AccountsServiceTests
     [Fact]
     private async Task ChangePassword_WithInvalidOldPassword_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
 
         var guestAccountResult = await _accountsService.RegisterGuestAccount(deviceId);
-        await _accountsService.ProtectAccount(guestAccountResult.Value.DeviceId, email, FakeDataHelper.GeneratePassword());
+        await _accountsService.ProtectAccount(guestAccountResult.Value.DeviceId, email, FakeDataFactory.GeneratePassword());
 
         var changePasswordResult = await _accountsService.ChangePassword(deviceId, "Invalid-Password", "New-Password");
 
@@ -141,7 +141,7 @@ public class AccountsServiceTests
     [Fact]
     private async Task ChangePassword_WithUnregisteredAccount_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
 
         var changePasswordResult = await _accountsService.ChangePassword(deviceId, "Invalid-Password", "New-Password");
 

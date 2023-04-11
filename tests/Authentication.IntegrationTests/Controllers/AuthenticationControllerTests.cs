@@ -4,6 +4,7 @@ using System.Text.Json;
 using Authentication.Api;
 using Authentication.Api.Dto;
 using Authentication.Domain.Common;
+using Authentication.IntegrationTests.Factories;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -16,15 +17,6 @@ public class AuthenticationControllerTests : WebApplicationFactory<Program>
     private const string Password = "my-password";
     private static JsonSerializerOptions _jsonWebSerializerOptions = new(JsonSerializerDefaults.Web);
 
-    private async Task CreateProtectedAccount(string deviceId, string email, string password)
-    {
-        var client = CreateClient();
-        var guestDto = new CreateGuestAccountDto(deviceId);
-        await client.PostAsJsonAsync("account/guest", guestDto);
-        var protectedDto = new ProtectAccountDto(deviceId, email, password);
-        await client.PostAsJsonAsync("account/protect", protectedDto);
-    }
-
     [Fact]
     private async Task Authenticate_WithRegisteredAccount_ShouldReturn200()
     {
@@ -32,7 +24,7 @@ public class AuthenticationControllerTests : WebApplicationFactory<Program>
 
         string deviceId = DeviceId;
         string email = Email;
-        await CreateProtectedAccount(deviceId, email, Password);
+        await client.CreateProtectedAccount(deviceId, email, Password);
 
         var dto = new AuthenticateDto(email, Password);
         var result = await client.PostAsJsonAsync("/authenticate", dto);
@@ -73,7 +65,7 @@ public class AuthenticationControllerTests : WebApplicationFactory<Program>
 
         string deviceId = DeviceId;
         string email = Email;
-        await CreateProtectedAccount(deviceId, email, Password);
+        await client.CreateProtectedAccount(deviceId, email, Password);
 
         var authenticateDto = new AuthenticateDto(email, Password);
         var authenticationResult = await client.PostAsJsonAsync("/authenticate", authenticateDto);
@@ -98,7 +90,7 @@ public class AuthenticationControllerTests : WebApplicationFactory<Program>
 
         string deviceId = DeviceId;
         string email = Email;
-        await CreateProtectedAccount(deviceId, email, Password);
+        await client.CreateProtectedAccount(deviceId, email, Password);
 
         var authenticateDto = new AuthenticateDto(email, Password);
         var authenticationResult = await client.PostAsJsonAsync("/authenticate", authenticateDto);

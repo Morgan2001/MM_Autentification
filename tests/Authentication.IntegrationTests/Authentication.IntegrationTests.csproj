@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Authentication.Api\Authentication.Api.csproj" />
+      <ProjectReference Include="..\Authentication.Tests.Shared\Authentication.Tests.Shared.csproj" />
     </ItemGroup>
 
 </Project>

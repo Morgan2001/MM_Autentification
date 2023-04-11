@@ -2,7 +2,7 @@
 using Authentication.Domain.Entities;
 using Authentication.Infrastructure.Options;
 using Authentication.Infrastructure.Services;
-using Authentication.UnitTests.Factories;
+using Authentication.Tests.Shared.Factories;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 
@@ -32,8 +32,8 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SendVerificationCode_WithRegisteredAccount_ShouldBeSuccessful()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        var account = await CreateProtectedAccount(deviceId, "roman@mogames.xyz", FakeDataHelper.GeneratePassword());
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        var account = await CreateProtectedAccount(deviceId, "roman@mogames.xyz", FakeDataFactory.GeneratePassword());
         var verificationResult = await _verificationService.SendVerificationCode(account.Email);
 
         verificationResult.IsSuccess.Should().BeTrue();
@@ -42,10 +42,10 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SendVerificationCode_WithAlreadyVerifiedAccount_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
 
-        var account = await CreateProtectedAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+        var account = await CreateProtectedAccount(deviceId, email, FakeDataFactory.GeneratePassword());
         account.IsVerified = true;
 
         var verificationResult = await _verificationService.SendVerificationCode(account.Email);
@@ -56,10 +56,10 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SendVerificationCode_WithAlreadySentCode_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
 
-        var account = await CreateProtectedAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+        var account = await CreateProtectedAccount(deviceId, email, FakeDataFactory.GeneratePassword());
         await _context.VerificationCodes.AddAsync(new VerificationCode(email, Guid.NewGuid().ToString()));
         await _context.SaveChangesAsync();
         var verificationResult = await _verificationService.SendVerificationCode(account.Email);
@@ -70,7 +70,7 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SendVerificationCode_WithUnregisteredAccount_ShouldBeFailed()
     {
-        var verificationResult = await _verificationService.SendVerificationCode(FakeDataHelper.GenerateEmail());
+        var verificationResult = await _verificationService.SendVerificationCode(FakeDataFactory.GenerateEmail());
 
         verificationResult.IsFailed.Should().BeTrue();
     }
@@ -78,11 +78,11 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SubmitVerificationCode_WithValidCode_ShouldBeSuccessful()
     {
-        string generatedEmail = FakeDataHelper.GenerateEmail();
+        string generatedEmail = FakeDataFactory.GenerateEmail();
         var account = await CreateProtectedAccount(
-            FakeDataHelper.GenerateDeviceId(),
+            FakeDataFactory.GenerateDeviceId(),
             generatedEmail,
-            FakeDataHelper.GeneratePassword());
+            FakeDataFactory.GeneratePassword());
 
         var verificationServiceMock = VerificationServiceMockFactory.Create(_context);
         var code = await verificationServiceMock.SendVerificationCode(generatedEmail);
@@ -96,11 +96,11 @@ public class EmailVerificationServiceTests
     [Fact]
     private async Task SubmitVerificationCode_WithInvalidCode_ShouldBeSuccessful()
     {
-        string generatedEmail = FakeDataHelper.GenerateEmail();
+        string generatedEmail = FakeDataFactory.GenerateEmail();
         var account = await CreateProtectedAccount(
-            FakeDataHelper.GenerateDeviceId(),
+            FakeDataFactory.GenerateDeviceId(),
             generatedEmail,
-            FakeDataHelper.GeneratePassword());
+            FakeDataFactory.GeneratePassword());
 
         var verificationServiceMock = VerificationServiceMockFactory.Create(_context);
         await verificationServiceMock.SendVerificationCode(generatedEmail);

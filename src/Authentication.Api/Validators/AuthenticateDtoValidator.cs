@@ -7,7 +7,7 @@ public class AuthenticateDtoValidator : AbstractValidator<AuthenticateDto>
 {
     public AuthenticateDtoValidator()
     {
-        RuleFor(x => x.Email).NotEmpty();
+        RuleFor(x => x.Email).EmailAddress().NotEmpty();
         RuleFor(x => x.Password).NotEmpty();
     }
 }

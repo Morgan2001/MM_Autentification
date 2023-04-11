@@ -4,7 +4,7 @@ using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace Authentication.UnitTests.Factories;
+namespace Authentication.Tests.Shared.Factories;
 
 public static class VerificationServiceMockFactory
 {
