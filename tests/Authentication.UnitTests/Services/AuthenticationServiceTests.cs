@@ -1,7 +1,7 @@
 ﻿using Authentication.Application.Interfaces;
 using Authentication.Domain.Entities;
 using Authentication.Infrastructure.Services;
-using Authentication.UnitTests.Factories;
+using Authentication.Tests.Shared.Factories;
 using FluentAssertions;
 
 namespace Authentication.UnitTests.Services;
@@ -38,9 +38,9 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task Authenticate_WithValidCredentials_ShouldBeSuccessful()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
-        string password = FakeDataHelper.GeneratePassword();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
+        string password = FakeDataFactory.GeneratePassword();
 
         await CreateProtectedAccount(deviceId, email, password);
 
@@ -55,10 +55,10 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task Authenticate_WithInvalidCredentials_ShouldBeFailed()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
 
-        await CreateProtectedAccount(deviceId, email, FakeDataHelper.GeneratePassword());
+        await CreateProtectedAccount(deviceId, email, FakeDataFactory.GeneratePassword());
 
         var result = await _authenticationService.Authenticate(email, "invalid-password");
 
@@ -68,9 +68,9 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task Authenticate_WithUnregisteredAccount_ShouldBeFailed()
     {
-        string email = FakeDataHelper.GenerateEmail();
+        string email = FakeDataFactory.GenerateEmail();
 
-        var result = await _authenticationService.Authenticate(email, FakeDataHelper.GeneratePassword());
+        var result = await _authenticationService.Authenticate(email, FakeDataFactory.GeneratePassword());
 
         result.IsFailed.Should().BeTrue();
     }
@@ -78,9 +78,9 @@ public class AuthenticationServiceTests
     [Fact]
     private async Task RefreshToken_WithValidToken_ShouldBeSuccessful()
     {
-        string deviceId = FakeDataHelper.GenerateDeviceId();
-        string email = FakeDataHelper.GenerateEmail();
-        string password = FakeDataHelper.GeneratePassword();
+        string deviceId = FakeDataFactory.GenerateDeviceId();
+        string email = FakeDataFactory.GenerateEmail();
+        string password = FakeDataFactory.GeneratePassword();
         
         await CreateProtectedAccount(deviceId, email, password);
 
