@@ -10,13 +10,30 @@ dotnet build ./src/Authentication.Api
 #### Docker build:
 
 ```
-docker build -t morgan2001/authentication-api .
+docker build -t docker pull ghcr.io/morgan2001/mm_autentification .
 ```
 
 #### Docker run:
 
 ```
-docker run -d -p 8080:80 -e ASPNET_ENVIRONMENT=Development ghcr.io/morgan2001/authentication-api
+docker pull docker pull ghcr.io/morgan2001/mm_autentification:master
+
+//Development
+docker run -d -p 8080:80 -e ASPNET_ENVIRONMENT=Development ghcr.io/morgan2001/mm_autentification:master
+
+//Production 
+docker run -d -p 8080:80 ghcr.io/morgan2001/mm_autentification:master
+```
+
+#### Docker compose:
+```
+services:
+  authentication-api:
+    image: ghcr.io/morgan2001/mm_autentification:master
+    ports:
+      - "8099:80"
+    volumes:
+      - /home/appsettings.json:/app/appsettings.json
 ```
 
 ### Api Documentation
