@@ -8,7 +8,7 @@ public class ProtectAccountDtoValidator : AbstractValidator<ProtectAccountDto>
     public ProtectAccountDtoValidator()
     {
         RuleFor(x => x.DeviceId).NotEmpty();
-        RuleFor(x => x.Email).NotEmpty();
+        RuleFor(x => x.Email).EmailAddress().NotEmpty();
         RuleFor(x => x.Password).NotEmpty();
     }
 }
